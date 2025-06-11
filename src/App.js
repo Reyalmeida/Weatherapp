@@ -9,6 +9,7 @@ import './App.css';
 function App() {
   const [city, setCity] = useState('');
   const[weather, setWeather]= useState(null);
+  const [citiesSearched, setCitiesSearched] =useState([]);
   const getWeather = async () => {
     const apiKey ="34d203d1093abb75994692a4b536bfcc";
 
@@ -22,6 +23,7 @@ function App() {
       const data = await response.json();
       console.log(data);
       setWeather(data);
+      setCitiesSearched((prev => [...prev, data.name]))
     }catch(err) {
       console.error("Error fetching weather:", err);
       setWeather(null);
@@ -41,6 +43,15 @@ function App() {
         onChange={(e) => setCity(e.target.value)}/>
         <br /><br />
         <button onClick={getWeather}>Get Weather</button>
+        {citiesSearched.length > 0 &&(<div style={{ marginTop: '30px'}}>
+          <h3>🔍 Cities You Searched</h3>
+          <ul style={{listStyleType: 'none', padding:0}}>
+            {citiesSearched.map((cityName, index)=>(<li key ={index}>{cityName}</li>
+          
+            ))}
+          </ul>
+        </div>
+      )}
       <p>You typed: {city}</p>
       {weather && weather.main && ( <WeatherCard weather={weather} />
        
